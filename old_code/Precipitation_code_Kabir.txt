@@ -1,0 +1,45 @@
+// Import table or shapefile 
+//call Image collection
+var AOD = ee.ImageCollection("UCSB-CHG/CHIRPS/DAILY");
+
+// just store table in variable CACensus. So nothing is required to be changed 
+// in this code
+var CACensus = table;  
+//--Filter data with band requiewd and date----------
+var filtAOD01 = AOD.filterDate('2011-01-01','2011-07-01')
+                   .select(['precipitation']);
+
+//print(filtAOD01)
+// As data beyong 5000 images won't be processed in one go
+// Yearly data is then extracted using day of year
+//----------------------------------------
+// first make an image collection for the available days
+var imgColPerday = ee.ImageCollection.fromImages(ee.List.sequence(1,366).map(function(day){
+  var image = filtAOD01.filter(ee.Filter.calendarRange(day,day,'day_of_year'))
+            .select('precipitation').mean();    // put band name here
+  return image.set('day_of_year', day); // set the day
+  //filter out empty images
+})).filter(ee.Filter.listContains('system:band_names', 'precipitation')); // put band name here
+
+//print(imgColPerday)
+
+// Then apply reduceRegions over polygon and storing in "data" variable
+var data =  ee.FeatureCollection(imgColPerday.map(function(image){
+
+  // calculate data
+  var AOD01Census = image.reduceRegions({  
+      collection: CACensus,
+      reducer: 'mean',
+      scale: 1000,
+  }).map(function(feat){
+    return feat.set('day_of_year',image.get('day_of_year'));
+  });  
+ 
+  return AOD01Census;
+})).flatten()
+  // probably you want to filter out null values
+// .filter(ee.Filter.notNull([ 'mean']));
+
+Export.table.toDrive(data,'prec_2011_1'); 
+//print(data)
+//print(CACensus)

@@ -1,0 +1,15 @@
+# LULC Implementation Process Tracking
+This file is used to document all process changes and methodologies for the Arunachal Pradesh LULC pipeline.
+
+## Feature Extraction Additions
+- Will utilize CHIRPS precipitation data based on logic transcribed from legacy scripts.
+- Will collect GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL foundation embeddings.
+- Will calculate NDVI, NDWI, SAVI, PRI, CAI, EVI, EVI2, HallCover, HallHeigth, GCVI and raw Sentinel/Landsat bands over target observations in dynamic temporal alignment with reference coordinates found in `cleaned_dataset_2.csv`.
+
+## Post-Classification Sanity Checks Added
+- Introduced hard constraints for elevation, slope, temporal stability, and proximity (HAND data) to filter spectral confusion across critical classes (Jhum, Wet Paddy, Alpine Grassland, Bamboo, Urban, and Water).
+
+## Data Extraction and Unsupervised Setup
+- Switched EE logic to `ee.FeatureCollection` for scaling extraction of 43,000+ coordinates sequentially tied to collection year.
+- Setup `src/EDA.py` to evaluate structural mappings utilizing Unnormalized PCA and K-Means clusters (per instruction).
+- Setup A/B Model Feature validation comparing performance on strictly structural data versus data enhanced with Gemini Embedding 2 properties.

@@ -1,0 +1,6 @@
+pandas
+earthengine-api
+geopandas
+scikit-learn
+imbalanced-learn
+torch

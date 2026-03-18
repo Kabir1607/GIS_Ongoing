@@ -1,0 +1,19 @@
+# Cloud Masking A/B Testing Report
+
+## Objective
+To compare the performance of 3 cloud masking algorithms over the chronic cloud-cover in Arunachal Pradesh.
+
+## Strategies Evaluated
+1. **Control (C1)**: Quality Mosaic via Landsat 8 QA_PIXEL bitmask and custom cloud score logic (derived from user legacy code).
+2. **Experimental (C2)**: Sentinel-2 Harmonized joining with `s2cloudless` probabilties < 50% mask and median compositing.
+3. **Experimental (C3)**: Sentinel-2 Harmonized joining with Cloud Score Plus (CS+) thresholds >= 0.6 and median compositing.
+
+## Methodology
+- **Metric**: Standard Deviation of NDVI over stable old-growth forest regions. (Lower SD assumes fewer unmasked clouds/shadows).
+- **Execution Script**: Located in `src/cloud_masking.py`.
+
+## Results
+[Placeholder: Waiting for GEE Pipeline Execution to produce variance metrics.]
+
+## Conclusion
+[Placeholder: Will select best mask for Topographic Correction based on lowest NDVI variance over stable test polygons.]
