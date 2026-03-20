@@ -1,0 +1,292 @@
+================================================================================
+        CODEBASE DESCRIPTION — LULC Classification Pipeline
+        Arunachal Pradesh, Eastern Himalayas (India)
+================================================================================
+
+1. PROJECT PURPOSE
+--------------------------------------------------------------------------------
+This codebase implements an end-to-end Land Use and Land Cover (LULC)
+classification system for Arunachal Pradesh, a mountainous state in the Eastern
+Himalayas. The region presents unique remote sensing challenges — chronic cloud
+cover, steep terrain causing topographic shadow, and highly imbalanced land cover
+classes (e.g., rare Bamboo and Alpine Grassland vs. dominant Forest).
+
+The pipeline spans from raw satellite data extraction through Google Earth
+Engine (GEE), to cloud masking A/B testing, topographic correction, feature
+engineering, spatial validation, ensemble model training, and rule-based
+post-processing. It also includes an experimental A/B framework to test the
+impact of Google's Gemini Embedding 2 vectors on classification accuracy.
+
+
+2. TARGET LAND COVER CLASSES (9 classes)
+--------------------------------------------------------------------------------
+    1. Alpine Grassland        (elevation-constrained: 3000–4500m)
+    2. Wet Paddy               (lowland agriculture, ceiling 2500m)
+    3. Jhum (Shifting Cultivation) (mid-altitude slash-and-burn, ceiling 3500m)
+    4. Urban
+    5. Water
+    6. Forest
+    7. Old-Growth Forest
+    8. Bamboo
+    9. Scrub
+
+
+3. PROJECT STRUCTURE
+--------------------------------------------------------------------------------
+final_analysis/
+├── context.md                  — Full project specification and roadmap
+├── requirements.txt            — Python dependencies (pandas, earthengine-api,
+│                                 geopandas, scikit-learn, imbalanced-learn, torch)
+├── src/                        — Core source code (9 modules)
+│   ├── authenticate_ee.py      — Google Earth Engine authentication
+│   ├── data_extraction.py      — Batch satellite data extraction pipeline
+│   ├── cloud_masking.py        — 3 cloud masking strategies (A/B testing)
+│   ├── topographic_correction.py — SCS+C terrain shadow correction
+│   ├── feature_engineering.py  — 10 spectral indices + precipitation + AEF
+│   ├── EDA.py                  — Exploratory Data Analysis (PCA, K-Means)
+│   ├── spatial_validation.py   — Moran's I, kNNDM, Adversarial Validation
+│   ├── model_training.py       — Ensemble ML models (RF, SVM, Stacking MLP)
+│   └── post_processing.py      — Rule-based spatial/temporal post-classification
+├── data/                       — Input datasets
+│   ├── cleaned_dataset_2.csv   — Primary dataset (~2.8 MB, 43,000+ GPS coordinates)
+│   ├── binning_filled.csv      — Class binning reference
+│   ├── dataset_1/              — (Empty, reserved for future use)
+│   └── dataset_2/
+│       └── binning_new.csv     — Updated class binning scheme
+├── data_visuals/               — Generated EDA visualizations
+│   ├── bin_population_bar_chart.png
+│   └── class_population_bar_chart.png
+├── models/                     — Trained model artifacts (empty, awaiting training)
+├── results/                    — Classification outputs (empty, awaiting results)
+├── reports/                    — Process logs, evaluation reports
+│   ├── process.txt             — Implementation tracking notes
+│   └── cloud_masking_test_results.txt — A/B test report template
+└── old_code/                   — Legacy GEE JavaScript reference scripts
+    ├── cloud_masking_algo.js   — Original Landsat 8 QA_PIXEL cloud masking
+    ├── 02_SpectralIndices.txt  — Original 10 spectral index formulas (JS)
+    └── Precipitation_code_Kabir.txt — Original CHIRPS precipitation extraction (JS)
+
+
+4. MODULE-BY-MODULE BREAKDOWN
+--------------------------------------------------------------------------------
+
+4.1  authenticate_ee.py
+     Opens a browser-based OAuth flow to authenticate with Google Earth Engine
+     using the project ID 'gis-hub-464402'. Must be run once before any data
+     extraction can proceed.
+
+4.2  data_extraction.py
+     The main data acquisition module. It:
+       - Reads cleaned GPS coordinates from cleaned_dataset_2.csv
+       - Converts each row into an ee.Feature with lat/lon/year properties
+       - For each point's specific year, extracts:
+           * Sentinel-2 SR Harmonized bands (B2, B3, B4, B8, B11, B12)
+           * Landsat 8 Surface Reflectance bands (SR_B2–SR_B7)
+           * Spectral indices (NDVI, NDWI, GCVI)
+           * CHIRPS daily precipitation (annual mean)
+           * AEF V1 Foundation Embeddings (64 dimensions)
+       - Processes in batches of 2,500 to respect GEE memory limits
+       - Exports results as CSV via ee.batch.Export.table.toDrive
+
+4.3  cloud_masking.py
+     Implements three cloud masking strategies for A/B testing:
+       - C1 (Control): Landsat 8 QA_PIXEL bitmask + quality mosaic
+         (ported from old_code/cloud_masking_algo.js)
+       - C2 (Experimental): Sentinel-2 + s2cloudless probability mask (<50%)
+         with median compositing
+       - C3 (Experimental): Sentinel-2 + Cloud Score Plus (CS+ >= 0.6)
+         with median compositing
+     The evaluation function (run_evaluation) is a stub awaiting static
+     forest NDVI standard deviation analysis to select the best strategy.
+
+4.4  topographic_correction.py
+     Applies Sun-Canopy-Sensor (SCS) topographic correction to compensate
+     for illumination differences caused by steep terrain. Uses the ALOS
+     AW3D30 DEM (30m resolution) for slope and aspect. The full SCS+C
+     algorithm (with per-band C regression coefficients) has a placeholder
+     for the linear regression step — currently falls back to basic SCS.
+
+4.5  feature_engineering.py
+     Computes 10 spectral vegetation/land cover indices from standardized
+     band names (blue, green, red, nir, swir1, swir2):
+       1. NDVI   — Normalized Difference Vegetation Index
+       2. NDWI   — Normalized Difference Water Index
+       3. SAVI   — Soil Adjusted Vegetation Index
+       4. PRI    — Photochemical Reflectance Index
+       5. CAI    — Cellulose Absorption Index
+       6. EVI    — Enhanced Vegetation Index
+       7. EVI2   — Two-band EVI
+       8. HallCover — Hall's cover metric
+       9. HallHeigth — Hall's height metric
+      10. GCVI   — Green Chlorophyll Vegetation Index
+     Also provides functions to fetch CHIRPS precipitation and AEF V1
+     Foundation Embeddings. The main extraction function
+     (extract_features_for_dataset) is a placeholder awaiting batch
+     implementation.
+
+4.6  EDA.py
+     Exploratory Data Analysis module that:
+       - Generates class distribution bar charts
+       - Applies unnormalized PCA (2 components) for dimensionality reduction
+       - Runs K-Means clustering (k=8) to evaluate natural data groupings
+       - Deliberately skips normalization to test raw spectral domain behavior
+       - Outputs visualizations to reports/EDA/
+
+4.7  spatial_validation.py
+     Implements three spatially-aware validation strategies to prevent data
+     leakage in geospatial ML:
+       - Moran's I: Calculates spatial autocorrelation at multiple distance
+         thresholds (0.01°, 0.05°, 0.1°, 0.5°) to find the range (phi)
+         beyond which points are independent
+       - kNNDM: k-fold Nearest Neighbor Distance Matching to ensure that
+         cross-validation folds match the distance distribution of the real
+         prediction task (currently falls back to standard KFold with NND
+         logging)
+       - Adversarial Validation (DAV): Trains a Random Forest to distinguish
+         train from test sets — high AUC indicates out-of-distribution test
+         splits, which is desirable for robustness checks
+
+4.8  model_training.py
+     Trains a supervised ensemble classification system:
+       - Applies K-Means SMOTE to oversample minority classes (Bamboo,
+         Grassland, Shifting Cultivation)
+       - Trains three model types:
+           * Random Forest (100 estimators)
+           * SVM (with probability support)
+           * Stacking Meta-Learner (RF + SVM as base, Logistic Regression
+             as final estimator)
+       - Includes an MLP Meta-Learner class (PyTorch) for future neural
+         ensemble stacking
+       - Runs A/B comparison: trains all models twice — once WITHOUT Gemini
+         Embedding 2 vectors (baseline) and once WITH them (experimental)
+       - Evaluates using: Weighted F1-Score, Mean IoU (Jaccard), Cohen's Kappa
+       - Saves models to models/ and evaluation reports to reports/
+
+4.9  post_processing.py
+     Applies domain-knowledge rules to refine raw predictions:
+       - Elevation Envelopes: Alpine Grassland only valid at 3000–4500m;
+         Wet Paddy ceiling at 2500m; Jhum ceiling at 3500m
+       - Slope Refinements: Jhum on flat ground (<5°) → Wet Paddy;
+         Wet Paddy on steep terrain (>20°) → Jhum; Urban on extreme
+         slopes (>35°) → Scrub
+       - Temporal Logic: Urban cannot revert to Forest/Water; Water cannot
+         jump to Jhum in one year; Old-Growth cannot become Wet Paddy
+         without intermediary
+       - Proximity Rules: Water with HAND >10m reclassified as Forest
+         (shadow correction); Bamboo excluded from high-altitude steep
+         zones (>3000m, >30°)
+       - BFAST stub for time-series break detection to identify stable
+         points over 5+ years
+
+
+5. DATA PIPELINE FLOW
+--------------------------------------------------------------------------------
+    ┌──────────────────┐
+    │ 1. Authenticate  │  authenticate_ee.py
+    │    (GEE OAuth)   │
+    └────────┬─────────┘
+             │
+    ┌────────▼─────────┐
+    │ 2. Extract Data  │  data_extraction.py
+    │    (GEE → CSV)   │  Sentinel-2, Landsat 8, CHIRPS, AEF V1
+    └────────┬─────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 3. Cloud Masking A/B Test │  cloud_masking.py
+    │    C1 vs C2 vs C3        │  Select best for downstream use
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 4. Topographic Correction │  topographic_correction.py
+    │    SCS+C via ALOS DEM    │  Compensate terrain shadow
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 5. Feature Engineering   │  feature_engineering.py
+    │    10 indices + Precip   │  + AEF Embeddings + Gemini Emb. 2
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 6. EDA & Unsupervised    │  EDA.py
+    │    PCA, K-Means          │  Class distribution analysis
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 7. Spatial Validation    │  spatial_validation.py
+    │    Moran's I, kNNDM, DAV │  Prevent spatial data leakage
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 8. Model Training        │  model_training.py
+    │    RF + SVM + Stacking   │  A/B test: ±Gemini Embeddings
+    │    + K-Means SMOTE       │
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 9. Post-Processing       │  post_processing.py
+    │    Elevation, slope,     │  Temporal, proximity rules
+    │    BFAST stability       │
+    └────────┬─────────────────┘
+             │
+    ┌────────▼──────────────────┐
+    │ 10. Evaluation Reports   │  F1-Score, mIoU, Kappa
+    └───────────────────────────┘
+
+
+6. KEY TECHNICAL DESIGN DECISIONS
+--------------------------------------------------------------------------------
+  • Multi-sensor fusion: Combines Sentinel-2 (10–20m) and Landsat 8 (30m) for
+    broader spectral coverage and temporal gap-filling.
+
+  • Foundation embeddings: Integrates Google Satellite Embedding V1 (64-D annual
+    trajectory summaries) alongside an experimental Gemini Embedding 2 (3072-D
+    multimodal vectors) for A/B impact testing.
+
+  • Batch processing: The extraction pipeline splits 43,000+ points into chunks
+    of 2,500 to avoid Google Earth Engine memory limits.
+
+  • Class imbalance handling: Uses K-Means SMOTE specifically for
+    underrepresented classes (Bamboo, Grassland, Shifting Cultivation).
+
+  • Spatial validation: Goes beyond random train/test splits — uses Moran's I
+    for autocorrelation range estimation, kNNDM for distance-matched folds, and
+    adversarial validation for out-of-distribution robustness checks.
+
+  • Domain-knowledge post-processing: Hard rules coded from ecological and
+    geographic knowledge of Arunachal Pradesh (elevation zones, slope
+    constraints, temporal land-change logic, HAND-based shadow correction).
+
+
+7. CURRENT PROJECT STATUS
+--------------------------------------------------------------------------------
+  • Data extraction pipeline: IMPLEMENTED and ready to run (pending GEE task
+    execution on server side)
+  • Cloud masking A/B test: CODE COMPLETE, results pending GEE execution
+  • Topographic correction: IMPLEMENTED (basic SCS); full SCS+C regression
+    has a placeholder
+  • Feature engineering: IMPLEMENTED (10 indices + precipitation + AEF)
+  • EDA: IMPLEMENTED and partially run (class distribution charts exist in
+    data_visuals/)
+  • Spatial validation: IMPLEMENTED (Moran's I, kNNDM stub, adversarial
+    validation)
+  • Model training: IMPLEMENTED (RF, SVM, Stacking; A/B Gemini test built)
+  • Post-processing: IMPLEMENTED (all spatial/temporal rules coded)
+  • Models directory: EMPTY (training not yet executed)
+  • Results directory: EMPTY (no final outputs yet)
+
+  In summary: the full pipeline architecture is built. The system is waiting
+  on Google Earth Engine batch exports to complete data extraction before the
+  downstream stages (EDA → validation → training → post-processing) can be
+  executed.
+
+
+8. LEGACY CODE REFERENCE (old_code/)
+--------------------------------------------------------------------------------
+  The old_code/ directory contains the original Google Earth Engine JavaScript
+  snippets that were ported into the current Python codebase:
+    - cloud_masking_algo.js → ported to cloud_masking.py (C1 control)
+    - 02_SpectralIndices.txt → ported to feature_engineering.py (all 10 indices)
+    - Precipitation_code_Kabir.txt → ported to data_extraction.py
+      and feature_engineering.py (CHIRPS extraction)
+
+================================================================================

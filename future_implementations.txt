@@ -1,0 +1,7 @@
+- Implement and test explicit cloud masking strategies (e.g., Sentinel-2 Cloud Score+, s2cloudless, Landsat QA pixel masking) *before* data extraction in Google Earth Engine. 
+  - Current data relies on annual median compositing, which acts as a basic cloud filter, but dedicated masking might improve signal clarity, particularly over persistently cloudy regions like Arunachal Pradesh.
+  - Doing this requires modifying `src/data_extraction.py` and re-running the extraction pipeline to generate a "V2" dataset.
+
+- Integrate topographic correction exactly as proposed in `src/topographic_correction.py` into the main Google Earth Engine data extraction pipeline.
+  - Because Topographic Correction relies on slope, aspect, and precise solar geometry at the exact instant of the satellite pass, it must be performed strictly inside Earth Engine *prior* to downloading the target data.
+  - The SCS+C (Sun-Canopy-Sensor) approach should be applied to all continuous optical bands (Sentinel-2 and Landsat 8) in `src/data_extraction.py` to account for illumination differences on mountain slopes.

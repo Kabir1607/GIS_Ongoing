@@ -1,0 +1,34 @@
+UNSUPERVISED LEARNING & DIMENSIONALITY REDUCTION REPORT
+======================================================================
+Data: 42927 samples, 80 normalized features
+
+--- PCA Summary ---
+Components for 90% variance: 20 (out of 80)
+Components for 95% variance: 30
+Top 5 components explain:    57.5%
+
+--- K-Means Clustering (K=8) ---
+Cluster composition by Level 1 class:
+Level_1         Agriculture  Barren / Landslide  Forest  Grassland / Shrub  Urban / Built-up  Water
+KMeans_Cluster                                                                                     
+0                      5916                  16     435                  0               175    918
+1                      3483                   4     539                  8                99   1383
+2                      4847                   1      37                 23               149    177
+3                        39                   0       3                683                 6     12
+4                      5789                   2     170                 27               100    174
+5                      4717                   6     256                  0              1065   1626
+6                      7467                   0       1                 22              1057    181
+7                        15                   0     401                  0                 8    890
+
+--- DBSCAN (Density-Based Clustering) ---
+Input space: 30 Principal Components (95% variance)
+Hyperparameters: eps=7.04, min_samples=60
+Clusters found: 2
+Noise points: 745 (1.7%)
+
+--- LDA (Linear Discriminant Analysis) ---
+Target classes: 6 (Level 1)
+Linear discriminants produced: 5
+Variance captured by LD1: 58.7%
+Variance captured by LD2: 23.6%
+Summary: LDA projection shows how highly separable the broad Level 1 classes are when the optimization goal is class separation (unlike PCA, which is blind to labels).

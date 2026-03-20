@@ -1,0 +1,83 @@
+======================================================================
+SUPERVISED MODELING: A/B TESTING AEF EMBEDDINGS
+With SMOTE & Spatial Validation Matrix
+======================================================================
+Loading augmented data from: /home/Kdixter/Desktop/final_analysis/data/dataset_2/analysis_data/augmented_data.csv
+Dataset Size: 42182 samples
+Target: Level_2 (9 classes)
+Ignoring class 'Barren / Landslide' in custom Macro F1 metric (N=29)
+Feature Set A (Baseline): 26 features (Optical + Indices + Climate + Unsupervised)
+Feature Set B (w/ AEF):   90 features (+64 AEF embeddings)
+----------------------------------------------------------------------
+
+[1/3] Running Spatial Validation (Train/Test Split Diagnostics)...
+  Adversarial Validation ROC AUC: 0.5028
+    -> Split is Excellent (Test set characteristics match Train set).
+  Mean Test-to-Train Nearest Neighbor Distance: 0.00099 degrees
+
+[2/3] Configuring SMOTE targeting limits...
+
+[3/3] Commencing Model Training loops...
+
+Training RandomForest on Baseline (No AEF)...
+  Post-SMOTE shape: (40394, 26) (synthesized 6649 instances)
+  Time: 2.3s | Full Macro F1: 0.8136 | Custom Macro F1 (Valid Classes): 0.8153
+
+Training RandomForest on Full (With AEF)...
+  Post-SMOTE shape: (40394, 90) (synthesized 6649 instances)
+  Time: 3.4s | Full Macro F1: 0.8554 | Custom Macro F1 (Valid Classes): 0.8623
+
+Training XGBoost on Baseline (No AEF)...
+  Post-SMOTE shape: (40394, 26) (synthesized 6649 instances)
+  Time: 3.5s | Full Macro F1: 0.8421 | Custom Macro F1 (Valid Classes): 0.8320
+
+Training XGBoost on Full (With AEF)...
+  Post-SMOTE shape: (40394, 90) (synthesized 6649 instances)
+  Time: 13.8s | Full Macro F1: 0.8771 | Custom Macro F1 (Valid Classes): 0.8867
+
+======================================================================
+A/B TEST SUMMARY (Custom Macro F1 Score - Excluding Barren/Landslide)
+======================================================================
+Model           Baseline (No AEF)    Full (With AEF)      Absolute Gain
+----------------------------------------------------------------------
+RandomForest    0.8153               0.8623               +0.0471
+XGBoost         0.8320               0.8867               +0.0547
+
+======================================================================
+DETAILED REPORTS
+======================================================================
+
+--- RandomForest (Full config with AEF) ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9256    0.9655    0.9451       116
+             Barren / Landslide     1.0000    0.6667    0.8000         6
+                   Dense Canopy     0.6831    0.9476    0.7939       248
+              Grassland / Shrub     0.9670    0.9888    0.9778        89
+    Shifting Cultivation (Jhum)     0.8429    0.8491    0.8460      2598
+Tree-based/Perennial Plantation     0.7061    0.8072    0.7533      1354
+               Urban / Built-up     0.8689    0.8061    0.8363       526
+                          Water     0.9185    0.8017    0.8561      1054
+  Wet/Valley Agriculture (Rice)     0.9175    0.8643    0.8901      2446
+
+                       accuracy                         0.8440      8437
+                      macro avg     0.8700    0.8552    0.8554      8437
+                   weighted avg     0.8515    0.8440    0.8458      8437
+
+
+--- XGBoost (Full config with AEF) ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9741    0.9741    0.9741       116
+             Barren / Landslide     1.0000    0.6667    0.8000         6
+                   Dense Canopy     0.7296    0.9032    0.8072       248
+              Grassland / Shrub     0.9886    0.9775    0.9831        89
+    Shifting Cultivation (Jhum)     0.8821    0.8349    0.8578      2598
+Tree-based/Perennial Plantation     0.7140    0.8575    0.7792      1354
+               Urban / Built-up     0.8953    0.8783    0.8868       526
+                          Water     0.9225    0.8691    0.8950      1054
+  Wet/Valley Agriculture (Rice)     0.9334    0.8884    0.9103      2446
+
+                       accuracy                         0.8663      8437
+                      macro avg     0.8933    0.8722    0.8771      8437
+                   weighted avg     0.8739    0.8663    0.8683      8437

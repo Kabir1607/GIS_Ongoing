@@ -4,3 +4,4 @@ geopandas
 scikit-learn
 imbalanced-learn
 torch
+seaborn 

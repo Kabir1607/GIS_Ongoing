@@ -1,0 +1,159 @@
+================================================================================
+DETAILED MODEL PERFORMANCE REPORT (LEVEL 1 & LEVEL 2)
+================================================================================
+
+===============================================================================
+Model: RANDOMFOREST_BASELINE
+===============================================================================
+
+--- LEVEL 1 AGGREGATED CLASSIFICATION REPORT ---
+                    precision    recall  f1-score   support
+
+       Agriculture     0.9707    0.9745    0.9726      6398
+Barren / Landslide     1.0000    0.6667    0.8000         6
+            Forest     0.6998    0.9093    0.7909       364
+ Grassland / Shrub     0.9663    0.9663    0.9663        89
+  Urban / Built-up     0.7481    0.7452    0.7467       526
+             Water     0.8593    0.7533    0.8028      1054
+
+          accuracy                         0.9295      8437
+         macro avg     0.8740    0.8359    0.8466      8437
+      weighted avg     0.9312    0.9295    0.9293      8437
+
+
+--- LEVEL 2 DIRECT CLASSIFICATION REPORT ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9492    0.9655    0.9573       116
+             Barren / Landslide     1.0000    0.6667    0.8000         6
+                   Dense Canopy     0.6169    0.8831    0.7264       248
+              Grassland / Shrub     0.9663    0.9663    0.9663        89
+    Shifting Cultivation (Jhum)     0.7991    0.7748    0.7868      2598
+Tree-based/Perennial Plantation     0.6687    0.7290    0.6975      1354
+               Urban / Built-up     0.7481    0.7452    0.7467       526
+                          Water     0.8593    0.7533    0.8028      1054
+  Wet/Valley Agriculture (Rice)     0.8414    0.8352    0.8383      2446
+
+                       accuracy                         0.7882      8437
+                      macro avg     0.8277    0.8132    0.8136      8437
+                   weighted avg     0.7934    0.7882    0.7894      8437
+
+
+
+
+===============================================================================
+Model: RANDOMFOREST_FULL
+===============================================================================
+
+--- LEVEL 1 AGGREGATED CLASSIFICATION REPORT ---
+                    precision    recall  f1-score   support
+
+       Agriculture     0.9720    0.9828    0.9774      6398
+Barren / Landslide     1.0000    0.6667    0.8000         6
+            Forest     0.7462    0.9533    0.8372       364
+ Grassland / Shrub     0.9670    0.9888    0.9778        89
+  Urban / Built-up     0.8689    0.8061    0.8363       526
+             Water     0.9185    0.8017    0.8561      1054
+
+          accuracy                         0.9477      8437
+         macro avg     0.9121    0.8666    0.8808      8437
+      weighted avg     0.9491    0.9477    0.9473      8437
+
+
+--- LEVEL 2 DIRECT CLASSIFICATION REPORT ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9256    0.9655    0.9451       116
+             Barren / Landslide     1.0000    0.6667    0.8000         6
+                   Dense Canopy     0.6831    0.9476    0.7939       248
+              Grassland / Shrub     0.9670    0.9888    0.9778        89
+    Shifting Cultivation (Jhum)     0.8429    0.8491    0.8460      2598
+Tree-based/Perennial Plantation     0.7061    0.8072    0.7533      1354
+               Urban / Built-up     0.8689    0.8061    0.8363       526
+                          Water     0.9185    0.8017    0.8561      1054
+  Wet/Valley Agriculture (Rice)     0.9175    0.8643    0.8901      2446
+
+                       accuracy                         0.8440      8437
+                      macro avg     0.8700    0.8552    0.8554      8437
+                   weighted avg     0.8515    0.8440    0.8458      8437
+
+
+
+
+===============================================================================
+Model: XGBOOST_BASELINE
+===============================================================================
+
+--- LEVEL 1 AGGREGATED CLASSIFICATION REPORT ---
+                    precision    recall  f1-score   support
+
+       Agriculture     0.9771    0.9670    0.9720      6398
+Barren / Landslide     0.8571    1.0000    0.9231         6
+            Forest     0.7388    0.9478    0.8303       364
+ Grassland / Shrub     0.9659    0.9551    0.9605        89
+  Urban / Built-up     0.7348    0.8270    0.7782       526
+             Water     0.8759    0.7903    0.8309      1054
+
+          accuracy                         0.9353      8437
+         macro avg     0.8583    0.9145    0.8825      8437
+      weighted avg     0.9389    0.9353    0.9360      8437
+
+
+--- LEVEL 2 DIRECT CLASSIFICATION REPORT ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9912    0.9655    0.9782       116
+             Barren / Landslide     0.8571    1.0000    0.9231         6
+                   Dense Canopy     0.6582    0.9395    0.7741       248
+              Grassland / Shrub     0.9659    0.9551    0.9605        89
+    Shifting Cultivation (Jhum)     0.8308    0.7410    0.7833      2598
+Tree-based/Perennial Plantation     0.6317    0.7880    0.7013      1354
+               Urban / Built-up     0.7348    0.8270    0.7782       526
+                          Water     0.8759    0.7903    0.8309      1054
+  Wet/Valley Agriculture (Rice)     0.8715    0.8287    0.8495      2446
+
+                       accuracy                         0.7968      8437
+                      macro avg     0.8241    0.8706    0.8421      8437
+                   weighted avg     0.8089    0.7968    0.7994      8437
+
+
+
+
+===============================================================================
+Model: XGBOOST_FULL
+===============================================================================
+
+--- LEVEL 1 AGGREGATED CLASSIFICATION REPORT ---
+                    precision    recall  f1-score   support
+
+       Agriculture     0.9821    0.9844    0.9832      6398
+Barren / Landslide     1.0000    0.6667    0.8000         6
+            Forest     0.7967    0.9258    0.8564       364
+ Grassland / Shrub     0.9886    0.9775    0.9831        89
+  Urban / Built-up     0.8953    0.8783    0.8868       526
+             Water     0.9225    0.8691    0.8950      1054
+
+          accuracy                         0.9605      8437
+         macro avg     0.9309    0.8836    0.9007      8437
+      weighted avg     0.9613    0.9605    0.9606      8437
+
+
+--- LEVEL 2 DIRECT CLASSIFICATION REPORT ---
+                                 precision    recall  f1-score   support
+
+                         Bamboo     0.9741    0.9741    0.9741       116
+             Barren / Landslide     1.0000    0.6667    0.8000         6
+                   Dense Canopy     0.7296    0.9032    0.8072       248
+              Grassland / Shrub     0.9886    0.9775    0.9831        89
+    Shifting Cultivation (Jhum)     0.8821    0.8349    0.8578      2598
+Tree-based/Perennial Plantation     0.7140    0.8575    0.7792      1354
+               Urban / Built-up     0.8953    0.8783    0.8868       526
+                          Water     0.9225    0.8691    0.8950      1054
+  Wet/Valley Agriculture (Rice)     0.9334    0.8884    0.9103      2446
+
+                       accuracy                         0.8663      8437
+                      macro avg     0.8933    0.8722    0.8771      8437
+                   weighted avg     0.8739    0.8663    0.8683      8437
+
+
+
