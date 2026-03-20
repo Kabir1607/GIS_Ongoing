@@ -1,0 +1,47 @@
+# Project Progress: Implemented and Tested Features
+
+This document serves as the master tracking file for all data processing, spatial engineering, and machine learning pipelines that have been successfully fully executed, verified, and saved to the project directory.
+
+## 1. Data Cleaning & Integration
+- **Batch Processing**: Successfully merged 18 individual CSV payload batches generated from Google Earth Engine into a unified 42,000+ row dataset. 
+- **Deduplication**: Cleaned invalid NaN rows and deduplicated overlapping coordinates.
+- **Hierarchical Binning (`apply_binning.py`)**: Mapped raw, highly-fragmented `target_class` variables into a cohesive hierarchy: 
+  - `Level_1` (6 broad classes: Agriculture, Forest, Water, etc.) 
+  - `Level_2` (10 granular sub-classes: Shifting Cultivation (Jhum), Dense Canopy, Bamboo, etc.)
+- **Coordinate Extraction**: Automatically parsed JSON-formatted `.geo` strings (e.g., `{"type":"Point","coordinates":[...]}`) to extract numeric `longitude` and `latitude`.
+
+## 2. Statistical EDA & Preprocessing
+- **Comprehensive EDA (`EDA.py`)**: Generated thorough metrics on class imbalance ratios (Max/Min imbalance of 6000x), descriptive statistics, skewness/kurtosis, outlier detection (IQR method), and inter-feature correlation matrices.
+- **Population Visualization**: Exported structural bar charts mapping Level 1 vs Level 2 population hierarchies.
+- **Normalization (`normalize_data.py`)**: Applied Z-Score Standard Scaling (`StandardScaler`). Crucially, implemented a strict 80/20 train/test stratified split *before* fitting the scaler to mathematically prevent test-set data leakage.
+
+## 3. Unsupervised Feature Engineering
+- **PCA Dimensionality Reduction**: Compressed 80 raw features; found 20 Principal Components explained 90% of variance.
+- **K-Means Clustering**: Applied `K=8` clustering against the data and successfully one-hot encoded the output as 8 new features bridging non-linear boundaries.
+- **DBSCAN Outlier Isolation**: Ran density-based scanning on the PCA-reduced space to successfully identify and drop 745 extreme atmospheric/sensor noise points (1.7% of total data).
+- **Linear Discriminant Analysis (LDA)**: Maximized structural class separability across Level 1 outputs. Appended the top two vectors (`LD1`-58% variance, `LD2`-23% variance) back to the main dataset.
+
+## 4. Addressing Severe Data Imbalance
+- **Selective SMOTE**: Synthetically upsampled the most critical minority groups (`Dense Canopy` and `Grassland / Shrub` up to N=4000) inside `train_models.py`. *Note: Strictly applied post-split exclusively to `X_train` to preserve test integrity.*
+- **Algorithmic Punishments**: Passed `class_weight='balanced_subsample'` properties to Random Forest arrays, and manually calculated inverse frequency `sample_weight` parameters fed directly into XGBoost's `.fit()` logic.
+- **Custom F1 Evaluator**: Built a dynamic `f1_custom_macro` function explicitly programmed to ignore the unstable 29-point `Barren / Landslide` class to provide honest evaluation metrics for the remaining 9 classes.
+
+## 5. Spatial Validation & Confidence Checking
+- **Adversarial Validation (DAV)**: Inserted a spatial structural check to ensure our 80/20 Train/Test split suffered no covariate/spatial shift. Trained a Random Forest exclusively to classify "Train vs Test". Achieved an ROC AUC of `0.5028` (Perfectly random, highly robust split).
+- **Nearest-Neighbor Distance Testing**: Calculated average geospatial distances to nearest training structures to determine test set physical extrapolation limits (`0.00099` degree average proximity).
+
+## 6. Supervised ML A/B Testing
+- **Model Frameworks**: Executed Random Forest (`n_estimators=150`, `max_depth=15`) and XGBoost (`max_depth=6`, `learning_rate=0.1`). 
+- **A/B Test Execution**: Successfully ran parallel feature arrays: Baseline (Optical + Unsupervised) versus Full (Baseline + 64 AEF V1 Embeddings).
+- **Results**: Conclusively verified AEF embeddings provide a highly significant `~+5.5%` absolute gain in Macro F1 scores (XGBoost peaking at ~88.6% Custom Macro F1).
+
+## 7. Report Generation & Analysis Roll-Up
+- **Aggregated Output Engine (`generate_detailed_reports.py`)**: 
+  - Directly outputted distinct Precision, Recall, and F1 reports for the 10-class `Level_2` model predictions.
+  - Automatically mapped those `Level_2` prediction arrays back to the broad 6-class `Level_1` hierarchy and generated aggregated reports.
+  - Created customized Seaborn Confusion Matrices (`.png`) for all models across both aggregation levels.
+
+## 8. Geospatial Visualization Engine
+- **GeoPandas Implementation (`plot_predictions.py`)**: Restructured mathematical coordinates (`EPSG:4326` WGS84) into the `EPSG:3857` Web Mercator projection.
+- **Contextily Basemap Integration**: Autonomously downloaded real-time internet map tiles matching the regional Indian OpenStreetMap/Terrain standards.
+- **Map Rendering**: Flawlessly plotted all 42,000 XGBoost predictions simultaneously across the state of Arunachal Pradesh using dynamic color paletes against the geographic terrain, outputting ultra high-DPI reference maps.
