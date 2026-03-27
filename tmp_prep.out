@@ -1,0 +1,74 @@
+============================================================
+PHASE 0: DATA PREPARATION
+============================================================
+
+[1/6] Loading combined dataset from: /home/Kdixter/Desktop/final_analysis/data/dataset_3/dataset_3_combined_GEE.csv
+  Loaded 4103 rows with 95 columns
+
+[2/6] Computing Cross-Sensor & Novel Landsat Indices on RAW data...
+  --> Computed CSI_1 using L8_blue and L8_green (prod)
+  --> Computed CSI_2 using L8_blue and L8_red (prod)
+  --> Computed CSI_3 using L8_blue and L8_nir (prod)
+  --> Computed CSI_4 using L8_green and L8_red (prod)
+  --> Computed CSI_5 using L8_green and L8_nir (prod)
+
+  Baseline features (20): ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'NDVI', 'NDWI', 'GCVI', 'L8_blue', 'L8_green', 'L8_red', 'L8_nir', 'L8_swir1', 'L8_swir2', 'CSI_1', 'CSI_2', 'CSI_3', 'CSI_4', 'CSI_5']
+  AEF features (64): ['A00', 'A01', 'A02', 'A03', 'A04']... (showing first 5)
+  Total features: 84
+
+[4/6] Cleaning features...
+  Missing values: 2880
+  Infinite values: 0
+  Missing values after cleaning: 0
+
+============================================================
+Processing for LEVEL 1 classification
+============================================================
+
+[5/6] Splitting and normalizing (Level_1)...
+  Train: 3282 | Test: 821
+  Class distribution (train):
+    Agriculture: 408 (12.4%)
+    Forest: 819 (25.0%)
+    Grassland / Shrub: 416 (12.7%)
+    Monoculture: 400 (12.2%)
+    Shifting Cultivation: 412 (12.6%)
+    Tree-based Agriculture: 25 (0.8%)
+    Urban / Built-up: 401 (12.2%)
+    Water: 401 (12.2%)
+
+[6/6] Saving prepared data for Level_1...
+  All data saved to: /home/Kdixter/Desktop/final_analysis/data/dataset_3/processed
+  Encoders saved to: /home/Kdixter/Desktop/final_analysis/models/dataset_3
+
+============================================================
+Processing for LEVEL 2 classification
+============================================================
+
+[5/6] Splitting and normalizing (Level_2)...
+Traceback (most recent call last):
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/prepare_data.py", line 329, in <module>
+    main()
+    ~~~~^^
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/prepare_data.py", line 318, in main
+    l2_data = split_and_normalize(df, baseline_cols, aef_cols, all_feature_cols, 'Level_2')
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/prepare_data.py", line 167, in split_and_normalize
+    X_train, X_test, y_train, y_test, coords_train, coords_test = train_test_split(
+                                                                  ~~~~~~~~~~~~~~~~^
+        X_all, y, coords, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/sklearn/utils/_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/sklearn/model_selection/_split.py", line 2945, in train_test_split
+    train, test = next(cv.split(X=arrays[0], y=stratify))
+                  ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/sklearn/model_selection/_split.py", line 1928, in split
+    for train, test in self._iter_indices(X, y, groups):
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/sklearn/model_selection/_split.py", line 2346, in _iter_indices
+    raise ValueError(
+    ...<5 lines>...
+    )
+ValueError: The least populated classes in y have only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2. Classes with too few members are: [2, 7, 13]

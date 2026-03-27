@@ -1,0 +1,18 @@
+============================================================
+PHASE 1: XGBoost A/B BASELINE EXPERIMENTS (NORMALIZED)
+Level: level_1 | Trials: 30
+============================================================
+
+============================================================
+EXPERIMENT 1.2: F2_L8_Only_norm (NORMALIZED)
+  Feature Group:   F2_L8_Only
+  Noise Reduction: OFF
+  Level: level_1
+============================================================
+
+[1/5] Loading data variant...
+  Train: (3282, 6) | Test: (821, 6)
+
+[2/5] Running Bayesian hyperparameter search (30 trials)...
+  0%|          | 0/30 [00:00<?, ?it/s]/usr/lib64/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-77754-9857mrel'}
+  warnings.warn(

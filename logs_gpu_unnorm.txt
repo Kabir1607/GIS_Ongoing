@@ -1,0 +1,247 @@
+[W 2026-03-27 15:03:55,494] Trial 0 failed with parameters: {'n_estimators': 164, 'max_depth': 12, 'learning_rate': 0.026519192515694543, 'subsample': 0.8975485420149867, 'colsample_bytree': 0.6155681146306292, 'min_child_weight': 3, 'gamma': 0.7293705507356174} because of the following error: XGBoostError("Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}").
+Traceback (most recent call last):
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 286, in objective
+    model.fit(X_fold_train, y_fold_train, sample_weight=sample_weights)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/sklearn.py", line 1806, in fit
+    self._Booster = train(
+                    ~~~~~^
+        params,
+        ^^^^^^^
+    ...<9 lines>...
+        callbacks=self.callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/training.py", line 200, in train
+    bst.update(dtrain, iteration=i, fobj=obj)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 2390, in update
+    _check_call(
+    ~~~~~~~~~~~^
+        _LIB.XGBoosterUpdateOneIter(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            self.handle, ctypes.c_int(iteration), dtrain.handle
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 324, in _check_call
+    raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+xgboost.core.XGBoostError: Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}
+[W 2026-03-27 15:03:55,494] Trial 1 failed with parameters: {'n_estimators': 202, 'max_depth': 5, 'learning_rate': 0.1573578852931344, 'subsample': 0.8015602951627516, 'colsample_bytree': 0.6588414615904562, 'min_child_weight': 3, 'gamma': 0.8425441049100751} because of the following error: XGBoostError("Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}").
+Traceback (most recent call last):
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 286, in objective
+    model.fit(X_fold_train, y_fold_train, sample_weight=sample_weights)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/sklearn.py", line 1806, in fit
+    self._Booster = train(
+                    ~~~~~^
+        params,
+        ^^^^^^^
+    ...<9 lines>...
+        callbacks=self.callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/training.py", line 200, in train
+    bst.update(dtrain, iteration=i, fobj=obj)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 2390, in update
+    _check_call(
+    ~~~~~~~~~~~^
+        _LIB.XGBoosterUpdateOneIter(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            self.handle, ctypes.c_int(iteration), dtrain.handle
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 324, in _check_call
+    raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+xgboost.core.XGBoostError: Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}
+[W 2026-03-27 15:03:55,494] Trial 3 failed with parameters: {'n_estimators': 189, 'max_depth': 7, 'learning_rate': 0.24446945175797496, 'subsample': 0.8668949273559815, 'colsample_bytree': 0.9655816773200967, 'min_child_weight': 3, 'gamma': 3.794349433175358} because of the following error: XGBoostError("Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}").
+Traceback (most recent call last):
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 286, in objective
+    model.fit(X_fold_train, y_fold_train, sample_weight=sample_weights)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/sklearn.py", line 1806, in fit
+    self._Booster = train(
+                    ~~~~~^
+        params,
+        ^^^^^^^
+    ...<9 lines>...
+        callbacks=self.callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/training.py", line 200, in train
+    bst.update(dtrain, iteration=i, fobj=obj)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 2390, in update
+    _check_call(
+    ~~~~~~~~~~~^
+        _LIB.XGBoosterUpdateOneIter(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            self.handle, ctypes.c_int(iteration), dtrain.handle
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 324, in _check_call
+    raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+xgboost.core.XGBoostError: Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}
+[W 2026-03-27 15:03:55,494] Trial 2 failed with parameters: {'n_estimators': 238, 'max_depth': 12, 'learning_rate': 0.038036589433627664, 'subsample': 0.96509062409131, 'colsample_bytree': 0.6271031776701048, 'min_child_weight': 3, 'gamma': 4.001696127655947} because of the following error: XGBoostError("Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}").
+Traceback (most recent call last):
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 286, in objective
+    model.fit(X_fold_train, y_fold_train, sample_weight=sample_weights)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/sklearn.py", line 1806, in fit
+    self._Booster = train(
+                    ~~~~~^
+        params,
+        ^^^^^^^
+    ...<9 lines>...
+        callbacks=self.callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/training.py", line 200, in train
+    bst.update(dtrain, iteration=i, fobj=obj)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 2390, in update
+    _check_call(
+    ~~~~~~~~~~~^
+        _LIB.XGBoosterUpdateOneIter(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            self.handle, ctypes.c_int(iteration), dtrain.handle
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 324, in _check_call
+    raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+xgboost.core.XGBoostError: Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}
+[W 2026-03-27 15:03:55,496] Trial 0 failed with value None.
+[W 2026-03-27 15:03:55,498] Trial 1 failed with value None.
+[W 2026-03-27 15:03:55,499] Trial 3 failed with value None.
+[W 2026-03-27 15:03:55,500] Trial 2 failed with value None.
+============================================================
+PHASE 1: XGBoost A/B BASELINE EXPERIMENTS (UNNORMALIZED)
+Level: level_1 | Trials: 30
+============================================================
+
+============================================================
+EXPERIMENT 1.2: F2_L8_Only_unnorm (UNNORMALIZED)
+  Feature Group:   F2_L8_Only
+  Noise Reduction: OFF
+  Level: level_1
+============================================================
+
+[1/5] Loading data variant...
+  Train: (3282, 6) | Test: (821, 6)
+
+[2/5] Running Bayesian hyperparameter search (30 trials, 4 jobs)...
+    [SMOTE] Generated 40 synthetic samples for 'Tree-based Agriculture'
+    [SMOTE] Generated 40 synthetic samples for 'Tree-based Agriculture'
+    [SMOTE] Generated 40 synthetic samples for 'Tree-based Agriculture'
+    [SMOTE] Generated 40 synthetic samples for 'Tree-based Agriculture'
+Traceback (most recent call last):
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 547, in <module>
+    main()
+    ~~~~^^
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 528, in main
+    result = run_experiment(exp_id, EXPERIMENTS[exp_id], args.level, args.n_trials, args.unnormalized, args.gpu, args.n_jobs)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 327, in run_experiment
+    study.optimize(objective, n_trials=n_trials, n_jobs=n_jobs, show_progress_bar=(n_jobs == 1))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/study.py", line 490, in optimize
+    _optimize(
+    ~~~~~~~~~^
+        study=self,
+        ^^^^^^^^^^^
+    ...<7 lines>...
+        show_progress_bar=show_progress_bar,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 105, in _optimize
+    f.result()
+    ~~~~~~~~^^
+  File "/usr/lib64/python3.14/concurrent/futures/_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/concurrent/futures/_base.py", line 395, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.14/concurrent/futures/thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "/usr/lib64/python3.14/concurrent/futures/thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 165, in _optimize_sequential
+    frozen_trial_id = _run_trial(study, func, catch)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 263, in _run_trial
+    raise func_err
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/optuna/study/_optimize.py", line 206, in _run_trial
+    value_or_values = func(trial)
+  File "/home/Kdixter/Desktop/final_analysis/src/dataset_3_src/phase1_xgboost_ab.py", line 286, in objective
+    model.fit(X_fold_train, y_fold_train, sample_weight=sample_weights)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/sklearn.py", line 1806, in fit
+    self._Booster = train(
+                    ~~~~~^
+        params,
+        ^^^^^^^
+    ...<9 lines>...
+        callbacks=self.callbacks,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 751, in inner_f
+    return func(**kwargs)
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/training.py", line 200, in train
+    bst.update(dtrain, iteration=i, fobj=obj)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 2390, in update
+    _check_call(
+    ~~~~~~~~~~~^
+        _LIB.XGBoosterUpdateOneIter(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            self.handle, ctypes.c_int(iteration), dtrain.handle
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+  File "/home/Kdixter/.local/lib/python3.14/site-packages/xgboost/core.py", line 324, in _check_call
+    raise XGBoostError(py_str(_LIB.XGBGetLastError()))
+xgboost.core.XGBoostError: Invalid Input: 'gpu_hist', valid values are: {'approx', 'auto', 'exact', 'hist'}

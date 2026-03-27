@@ -1,0 +1,45 @@
+============================================================
+DATASET 3 BINNING REPORT
+============================================================
+
+Total rows: 4103
+Mapped rows: 4103
+Unmapped rows: 0
+
+--- Level 1 Distribution ---
+  Forest                     1024 (25.0%)
+  Grassland / Shrub           520 (12.7%)
+  Shifting Cultivation        515 (12.6%)
+  Agriculture                 510 (12.4%)
+  Urban / Built-up            501 (12.2%)
+  Water                       501 (12.2%)
+  Monoculture                 500 (12.2%)
+  Tree-based Agriculture       32 (0.8%)
+
+--- Level 2 Distribution ---
+  Jhum (Active)               511 (12.5%)
+  Rivers / Water Bodies       501 (12.2%)
+  Settlements                 501 (12.2%)
+  Dense Forest                500 (12.2%)
+  Open / Degraded Forest      500 (12.2%)
+  Monoculture                 500 (12.2%)
+  Rice Cultivation            500 (12.2%)
+  Alpine Meadow               500 (12.2%)
+  Bamboo                       17 (0.4%)
+  Grassland                    15 (0.4%)
+  Oil Palm                      8 (0.2%)
+  Citrus                        7 (0.2%)
+  Deciduous Forest              6 (0.1%)
+  Field Crops                   5 (0.1%)
+  Other Plantation              4 (0.1%)
+  Spice Plantation              4 (0.1%)
+  Jhum Fallow                   4 (0.1%)
+  Agroforestry                  4 (0.1%)
+  Tea                           4 (0.1%)
+  Scrubland                     3 (0.1%)
+  Pine                          2 (0.0%)
+  Rubber                        2 (0.0%)
+  Fern Cover                    2 (0.0%)
+  Fallow                        1 (0.0%)
+  Landslide                     1 (0.0%)
+  Arecanut                      1 (0.0%)

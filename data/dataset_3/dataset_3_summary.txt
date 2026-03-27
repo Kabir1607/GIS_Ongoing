@@ -1,0 +1,115 @@
+=========================================================
+Unique Classes and Descriptions in: raw_dataset_3.csv
+=========================================================
+
+Class: AM         | Description: Alpine Meadows
+Class: Agroforest | Description: mixd agro forest 25226
+Class: Agroforest | Description: agroforest-10-1-2
+Class: Arecanut Plantation | Description: abandoned tamool
+Class: Bamboo     | Description: bamboo
+Class: Bamboo     | Description: Bamboo 232261
+Class: Bamboo     | Description: Bamboo 212262
+Class: Bamboo     | Description: Bamboo 212261
+Class: Bamboo     | Description: bamboo 1226
+Class: Bamboo     | Description: bamboo 82262
+Class: Bamboo     | Description: bamboo 2226
+Class: Cardamom   | Description: Cardamom-19-1-26-1
+Class: Cardamom   | Description: elaichi
+Class: Cardamom   | Description: cardamom 22262
+Class: Chilli plantation | Description: Chili plantation 212261
+Class: DEFO       | Description: Dense Forests
+Class: Dragon Fruit Plantation | Description: Dragon Fruit plantation
+Class: Fern cover | Description: fernland 62262
+Class: Fern cover | Description: fernland 6226
+Class: Grassland  | Description: grass land
+Class: Jhum cropping | Description: Jhoom 2226
+Class: Jhum cropping | Description: jhum 12261
+Class: Jhum cropping | Description: jhum 211261
+Class: Jhum fallow | Description: jhum-10-1-1
+Class: Jhum fallow | Description: Jhoom 1002261
+Class: Jhum fallow | Description: Jhoom 11226
+Class: Jhum fallow | Description: Jhoom 24226
+Class: Landslide  | Description: landslide 2819
+Class: MN         | Description: Monoculture
+Class: Mixed decidous forest | Description: mixed decidous forest
+Class: Mixed plantation | Description: mix plantation 9-1-2
+Class: OP         | Description: Open forests
+Class: Oil Palm   | Description: Oil Palm 20220262
+Class: Oil Palm   | Description: oil palm 202261
+Class: Orange     | Description: citrus 1211261
+Class: Orange     | Description: Orange plantation 82261
+Class: Orange     | Description: Orange 2226
+Class: Orange     | Description: orange 232262
+Class: Pineapple  | Description: pineapple 232264
+Class: RC         | Description: Rice cultivation
+Class: RW         | Description: Rivers/water bodies
+Class: Rubber plantation | Description: Rubber plantation 212261
+Class: SB         | Description: Settlements and built-up areas
+Class: SC         | Description: Shifting cultivation
+Class: Tea plantation | Description: tea 242252
+Class: Tea plantation | Description: Tea 21226
+Class: Tea plantation | Description: tea 212262
+Class: Tea plantation | Description: tea 242261
+Class: Village    | Description: sango village
+Class: bamboo     | Description: Bamboo
+Class: bamboo     | Description: BAMBOO 3122
+Class: bamboo     | Description: BAMBOO 4126
+Class: bamboo     | Description: BAMBOO4121
+Class: bamboo     | Description: BAMBOO412
+Class: bamboo     | Description: bamboo 4124
+Class: bamboo     | Description: BAMBOO 7121
+Class: bamboo     | Description: bamboo 3124
+Class: bamboo     | Description: bamboo 3123
+Class: bamboo     | Description: bamboo 10121
+Class: decidous forest | Description: decidous forest 3
+Class: decidous forest | Description: mixed decidous forest 1
+Class: decidous forest | Description: decidous forest 2
+Class: decidous forest | Description: decidous forest 1
+Class: deciduous forest | Description: DE3CIDOUS 9121
+Class: fallow     | Description: fallow
+Class: grassland  | Description: bamboo 8121
+Class: grassland  | Description: grassland
+Class: grassland  | Description: grassland 293
+Class: grassland  | Description: grassland 294
+Class: grassland  | Description: grassland 295
+Class: grassland  | Description: grassland 2226
+Class: grassland  | Description: grassland 307
+Class: grassland  | Description: grassland 305
+Class: grassland  | Description: grassland 302
+Class: grassland  | Description: grassland 303
+Class: grassland  | Description: grassland 301
+Class: grassland  | Description: grassland 308
+Class: grassland  | Description: grassland 12261
+Class: jhum       | Description: JHUM 31256
+Class: jhum       | Description: JHUM 301
+Class: jhum       | Description: JHUM 3121
+Class: jhum       | Description: jhum 3121217
+Class: jhum       | Description: JHUM-271
+Class: jhum       | Description: jhum 3122
+Class: jhum       | Description: jhum 3123
+Class: jhum       | Description: jhum 3125
+Class: mixed agriculture | Description: AGRI
+Class: mixed plantation | Description: mixed agriculture
+Class: mustard    | Description: AGR-MUSTARD-2711
+Class: oil plam   | Description: Abango palm Oil
+Class: oil plam   | Description: Abango Palm Oil
+Class: oil plam   | Description: Palm Oil
+Class: oil plam   | Description: Injono Palm Oil
+Class: oil plam   | Description: oil palm
+Class: orange     | Description: AGRO-ORANGE-2711
+Class: orange     | Description: ORAN 4126
+Class: orange     | Description: AGRO-ORANGE-27NOV
+Class: pine       | Description: PINE-30112
+Class: pine       | Description: PINE 301
+Class: pineaple plantation | Description: Pineapple 2226
+Class: pineaple plantation | Description: pineapple 22262
+Class: rubber plantation | Description: PLANTATION
+Class: scrub      | Description: wasteland 296
+Class: scrub      | Description: wasteland
+Class: scrubland  | Description: scrubland 1
+Class: tomato     | Description: AGR-TOM2811
+Class: tomato     | Description: AGR-TOMATO-2511
+Class: tomato     | Description: AGR-TOMATO-2711
+Class: water      | Description: water 1
+
+Total unique classes found: 109

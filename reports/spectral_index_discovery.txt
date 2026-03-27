@@ -1,0 +1,255 @@
+SPECTRAL INDEX DISCOVERY REPORT — Dataset 2
+======================================================================
+Normalized data: 42927 samples × 80 features
+Raw data: 42927 samples × 80 features
+Classes: ['Agriculture', 'Barren / Landslide', 'Forest', 'Grassland / Shrub', 'Urban / Built-up', 'Water']
+NOTE: PCA/LDA fitted on normalized data; formulas computed on RAW band values
+
+======================================================================
+PHASE A: PCA / LDA LOADING ANALYSIS
+======================================================================
+
+PCA on all 80 features:
+  Top 5 components explain 57.5%
+
+PCA on 12 RAW spectral bands only:
+
+  PC1 (57.6% variance):
+           red: +0.3441
+        L8_red: +0.3431
+         green: +0.3393
+      L8_green: +0.3375
+       L8_blue: +0.3341
+          blue: +0.3330
+      L8_swir2: +0.2717
+      L8_swir1: +0.2603
+        L8_nir: +0.2294
+           nir: +0.2284
+         swir2: +0.2073
+         swir1: +0.1516
+
+  PC2 (17.6% variance):
+         swir1: +0.5603
+         swir2: +0.5276
+      L8_swir2: +0.3183
+      L8_swir1: +0.3041
+        L8_nir: -0.2550
+       L8_blue: -0.2126
+      L8_green: -0.1869
+           nir: -0.1596
+        L8_red: -0.1298
+          blue: -0.1266
+         green: -0.0970
+           red: -0.0327
+
+  PC3 (11.1% variance):
+           nir: +0.3840
+      L8_swir1: -0.3460
+         green: +0.3428
+          blue: +0.3410
+      L8_swir2: -0.3320
+           red: +0.3142
+        L8_nir: -0.2875
+        L8_red: -0.2402
+      L8_green: -0.2380
+       L8_blue: -0.2157
+         swir2: +0.1706
+         swir1: +0.1321
+
+  PC4 (7.4% variance):
+           nir: +0.6032
+        L8_nir: +0.6020
+         swir1: +0.2624
+      L8_swir1: +0.1895
+        L8_red: -0.1880
+           red: -0.1860
+          blue: -0.1602
+      L8_green: -0.1431
+       L8_blue: -0.1400
+         green: -0.1288
+      L8_swir2: -0.1020
+         swir2: -0.0800
+
+  PC5 (3.6% variance):
+      L8_swir1: +0.5012
+         swir1: -0.4007
+      L8_swir2: +0.3343
+       L8_blue: -0.3108
+      L8_green: -0.3063
+        L8_red: -0.2841
+         swir2: -0.2695
+          blue: +0.2320
+         green: +0.2147
+           red: +0.1688
+           nir: -0.0610
+        L8_nir: +0.0249
+
+LDA on RAW bands (target: Level_1):
+
+  LD1 (77.7% between-class variance):
+       L8_blue: +1.4531
+         green: -1.2538
+           red: +1.1618
+          blue: +1.0680
+         swir2: -0.6253
+        L8_red: -0.6131
+      L8_swir1: +0.3690
+      L8_swir2: -0.2095
+         swir1: +0.1644
+      L8_green: +0.1615
+           nir: +0.0965
+        L8_nir: +0.0188
+
+  LD2 (18.9% between-class variance):
+         green: +4.3642
+           red: -2.8885
+        L8_red: -1.8376
+      L8_green: +1.7073
+        L8_nir: -1.2507
+          blue: -1.0448
+         swir1: -0.7241
+         swir2: +0.6570
+           nir: -0.5779
+       L8_blue: +0.4858
+      L8_swir1: +0.3965
+      L8_swir2: +0.2480
+
+  LD3 (2.2% between-class variance):
+         green: -8.0253
+          blue: +5.0783
+           red: +2.6501
+        L8_red: -1.7193
+         swir2: +1.5380
+         swir1: -1.0955
+       L8_blue: +0.9628
+      L8_swir2: +0.7292
+           nir: +0.6258
+        L8_nir: +0.4524
+      L8_green: -0.3964
+      L8_swir1: +0.0694
+
+  LD4 (1.2% between-class variance):
+          blue: +4.3589
+        L8_red: -4.3289
+      L8_green: +3.2923
+           red: -2.7186
+         green: -1.9411
+         swir1: +1.9150
+       L8_blue: +1.6966
+         swir2: -1.3211
+        L8_nir: -1.1109
+      L8_swir2: +0.3508
+           nir: +0.2589
+      L8_swir1: +0.1304
+
+  LD5 (0.0% between-class variance):
+      L8_green: -6.5872
+          blue: +5.3427
+         green: -5.1741
+        L8_red: +3.7034
+       L8_blue: +2.6734
+         swir2: -0.5307
+           nir: +0.2143
+      L8_swir1: -0.1315
+      L8_swir2: +0.1119
+           red: -0.0339
+        L8_nir: +0.0252
+         swir1: -0.0069
+
+======================================================================
+PHASE B: EXHAUSTIVE CANDIDATE GENERATION
+======================================================================
+
+  Generated 836 total candidate formulas:
+    2-band combinations: 396
+    3-band combinations: 440
+
+======================================================================
+PHASE C: CORRELATION AGAINST PCA / LDA COMPONENTS
+======================================================================
+
+  Top 10 candidates by PCA R²:
+  Rank  Name                      Formula                                  Best PC  R²      
+  --------------------------------------------------------------------------------------
+  1     PR(L8_blue,red)           (L8_blue * red) / (L8_blue + red)        PC1      0.8427
+  2     PR(L8_red,red)            (L8_red * red) / (L8_red + red)          PC1      0.8391
+  3     PR(L8_green,red)          (L8_green * red) / (L8_green + red)      PC1      0.8382
+  4     PR(L8_blue,green)         (L8_blue * green) / (L8_blue + green)    PC1      0.8295
+  5     PR(L8_red,green)          (L8_red * green) / (L8_red + green)      PC1      0.8268
+  6     PR(L8_green,green)        (L8_green * green) / (L8_green + green)  PC1      0.8251
+  7     PR(L8_nir,red)            (L8_nir * red) / (L8_nir + red)          PC1      0.8204
+  8     PR(L8_green,L8_swir1)     (L8_green * L8_swir1) / (L8_green + L8_swir1) PC1      0.8165
+  9     PR(nir,red)               (nir * red) / (nir + red)                PC1      0.8156
+  10    PR(L8_red,L8_swir1)       (L8_red * L8_swir1) / (L8_red + L8_swir1) PC1      0.8132
+
+  Top 10 candidates by LDA R²:
+  Rank  Name                      Formula                                  Best LD  R²      
+  --------------------------------------------------------------------------------------
+  1     DI(L8_blue,swir1)         L8_blue - swir1                          LD1      0.8651
+  2     DI(L8_blue,swir2)         L8_blue - swir2                          LD1      0.8633
+  3     PR(L8_blue,L8_green)      (L8_blue * L8_green) / (L8_blue + L8_green) LD1      0.8513
+  4     PR(L8_blue,L8_nir)        (L8_blue * L8_nir) / (L8_blue + L8_nir)  LD1      0.8464
+  5     PR(L8_blue,L8_red)        (L8_blue * L8_red) / (L8_blue + L8_red)  LD1      0.8378
+  6     DI(L8_green,swir1)        L8_green - swir1                         LD1      0.8294
+  7     DI(L8_green,swir2)        L8_green - swir2                         LD1      0.8267
+  8     PR(L8_green,L8_nir)       (L8_green * L8_nir) / (L8_green + L8_nir) LD1      0.8094
+  9     PR(L8_green,L8_red)       (L8_green * L8_red) / (L8_green + L8_red) LD1      0.8072
+  10    DI(L8_red,swir2)          L8_red - swir2                           LD1      0.8057
+
+======================================================================
+PHASE D: CLASS SEPARABILITY SCORING
+======================================================================
+
+  Top 20 candidates by ANOVA F-statistic (class separability):
+  Rank  Name                      Formula                                  F-stat       FDR        PC R²    LD R²   
+  ------------------------------------------------------------------------------------------------------------
+  1     DI(L8_blue,swir1)         L8_blue - swir1                          13472.6      11228.7002 0.6769   0.8651  
+  2     DI(L8_blue,swir2)         L8_blue - swir2                          13348.5      11125.3409 0.6675   0.8633  
+  3     PR(L8_blue,L8_green)      (L8_blue * L8_green) / (L8_blue + L8_green) 12821.1      10685.7567 0.7825   0.8513  
+  4     PR(L8_blue,L8_red)        (L8_blue * L8_red) / (L8_blue + L8_red)  12369.0      10308.9070 0.7980   0.8378  
+  5     DI(L8_green,swir1)        L8_green - swir1                         12160.8      10135.4156 0.6877   0.8294  
+  6     PR(L8_blue,blue)          (L8_blue * blue) / (L8_blue + blue)      12073.0      10062.2322 0.8029   0.7737  
+  7     DI(L8_green,swir2)        L8_green - swir2                         12009.2      10009.1044 0.6777   0.8267  
+  8     PR(L8_blue,L8_nir)        (L8_blue * L8_nir) / (L8_blue + L8_nir)  11799.5      9834.3024  0.7636   0.8464  
+  9     PR(L8_red,blue)           (L8_red * blue) / (L8_red + blue)        11678.3      9733.3108  0.7998   0.7652  
+  10    PR(L8_green,blue)         (L8_green * blue) / (L8_green + blue)    11614.7      9680.2604  0.7982   0.7646  
+  11    DI(L8_red,swir1)          L8_red - swir1                           11439.0      9533.7957  0.7302   0.8053  
+  12    PR(L8_green,L8_red)       (L8_green * L8_red) / (L8_green + L8_red) 11365.5      9472.5744  0.8047   0.8072  
+  13    DI(L8_red,swir2)          L8_red - swir2                           11330.5      9443.3804  0.7245   0.8057  
+  14    PR(L8_blue,green)         (L8_blue * green) / (L8_blue + green)    11327.3      9440.7176  0.8295   0.7574  
+  15    PR(L8_green,L8_nir)       (L8_green * L8_nir) / (L8_green + L8_nir) 11071.1      9227.1812  0.7695   0.8094  
+  16    PR(L8_red,green)          (L8_red * green) / (L8_red + green)      10918.4      9099.9793  0.8268   0.7473  
+  17    PR(L8_green,green)        (L8_green * green) / (L8_green + green)  10874.5      9063.3811  0.8251   0.7471  
+  18    DI(L8_blue,L8_swir2)      L8_blue - L8_swir2                       10721.1      8935.5288  0.4688   0.7806  
+  19    DI(L8_red,L8_swir2)       L8_red - L8_swir2                        10593.1      8828.8127  0.5578   0.7783  
+  20    PR(L8_nir,blue)           (L8_nir * blue) / (L8_nir + blue)        10196.7      8498.4760  0.7758   0.7373  
+
+======================================================================
+PHASE E: COMPARISON WITH KNOWN SPECTRAL INDICES
+======================================================================
+
+  Known indices — ANOVA F-statistics:
+  Index      Bands                F-stat      
+  ------------------------------------------
+  MNDWI      green, swir1         4244.6      
+  NDWI       green, nir           3412.0      
+  SAVI       nir, red             2517.3      
+  NDVI       nir, red             2517.0      
+  GCVI       nir, green           1583.5      
+  NDBI       swir1, nir           1164.8      
+  LSWI       nir, swir1           1164.8      
+  NBR        nir, swir2           1134.6      
+
+  *** NOVEL FORMULAS OUTPERFORMING ALL KNOWN INDICES (F > 4244.6) ***
+  Rank  Name                      Formula                                  F-stat      
+  ----------------------------------------------------------------------------------
+  1     DI(L8_blue,swir1)         L8_blue - swir1                          13472.6     
+  2     DI(L8_blue,swir2)         L8_blue - swir2                          13348.5     
+  3     PR(L8_blue,L8_green)      (L8_blue * L8_green) / (L8_blue + L8_green) 12821.1     
+  4     PR(L8_blue,L8_red)        (L8_blue * L8_red) / (L8_blue + L8_red)  12369.0     
+  5     DI(L8_green,swir1)        L8_green - swir1                         12160.8     
+  6     PR(L8_blue,blue)          (L8_blue * blue) / (L8_blue + blue)      12073.0     
+  7     DI(L8_green,swir2)        L8_green - swir2                         12009.2     
+  8     PR(L8_blue,L8_nir)        (L8_blue * L8_nir) / (L8_blue + L8_nir)  11799.5     
+  9     PR(L8_red,blue)           (L8_red * blue) / (L8_red + blue)        11678.3     
+  10    PR(L8_green,blue)         (L8_green * blue) / (L8_green + blue)    11614.7     

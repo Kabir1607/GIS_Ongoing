@@ -1,0 +1,316 @@
+================================================================================
+               FORMALISED TESTING PLAN — Dataset 3 Model Development
+================================================================================
+
+                          Last Updated: 2026-03-27
+
+================================================================================
+I. OVERVIEW
+================================================================================
+
+Goal: Build and evaluate an ensemble LULC classifier for Arunachal Pradesh that
+maximises classification accuracy via systematic A/B testing across multiple
+independent axes: model architecture, feature engineering, data preprocessing,
+and cloud masking strategies.
+
+Evaluation Metric:
+  - Primary:   Custom Macro F1 Score (excludes classes with <30 samples)
+  - Secondary: Per-class Precision/Recall, Overall Accuracy, Confusion Matrices
+  - Spatial:   Adversarial Validation ROC AUC + Nearest-Neighbor Distance
+
+================================================================================
+II. TESTING AXES (Independent Variables)
+================================================================================
+
+Each axis below is an independent A/B dimension. Tests should be run such that
+one axis varies while others are held constant (controlled experiment design).
+
+──────────────────────────────────────────────────────────────────────────────
+AXIS 1: NOISE REDUCTION (Unsupervised Learning)
+──────────────────────────────────────────────────────────────────────────────
+  A) WITHOUT noise reduction  — Use the raw binned dataset directly
+  B) WITH noise reduction     — Apply DBSCAN to remove outlier/noise points,
+                                 append K-Means cluster IDs (one-hot) and
+                                 LDA components (LD1, LD2) as features
+
+  Justification: Tests whether unsupervised feature engineering genuinely helps
+  the downstream classifier or introduces unnecessary dimensionality.
+
+──────────────────────────────────────────────────────────────────────────────
+AXIS 2: AEF EMBEDDINGS (Gemini Satellite Embeddings)
+──────────────────────────────────────────────────────────────────────────────
+  A) Baseline features only   — Optical bands + spectral indices + Landsat
+  B) Full features             — Baseline + 64 AEF V1 embedding dimensions
+
+  Justification: Tests whether Google's pre-trained satellite image embeddings
+  contain latent spatial/spectral information that improves LULC classification
+  beyond what raw band values provide.
+
+──────────────────────────────────────────────────────────────────────────────
+AXIS 3: CLOUD MASKING STRATEGY (Applied During Data Extraction)
+──────────────────────────────────────────────────────────────────────────────
+  C0) No explicit masking      — Annual median composite (current approach)
+  C1) QA-Pixel qualityMosaic   — Landsat 8 QA bitmask + quality score mosaic
+                                  (src/cloud_masking.py → generate_c1_mosaic)
+  C2) s2cloudless               — Sentinel-2 cloud probability masking at
+                                  threshold < 50 (generate_c2_mosaic)
+  C3) Cloud Score+ (CS+)       — Google's CLOUD_SCORE_PLUS/V1 with clear
+                                  score ≥ 0.6 (generate_c3_mosaic)
+  C4) Dynamic Window            — User's custom algorithm that dynamically
+                                  selects a temporal window per-point to
+                                  minimise cloud cover exposure
+
+  NOTE: C1–C4 all require re-extraction from Earth Engine. Each generates a
+  separate version of the dataset. C0 is the existing baseline.
+
+  Justification: Arunachal Pradesh is one of the cloudiest regions on Earth.
+  Different masking strategies may remove cloud artifacts with varying
+  effectiveness, directly impacting spectral signal quality.
+
+──────────────────────────────────────────────────────────────────────────────
+AXIS 4: FEATURE GROUP (Input Feature Scope)
+──────────────────────────────────────────────────────────────────────────────
+  F1) S2 Only           — 6 Sentinel-2 bands (blue, green, red, nir, swir1, swir2)
+  F2) L8 Only           — 6 Landsat-8 bands (L8_blue, L8_green, L8_red, L8_nir,
+                           L8_swir1, L8_swir2)
+  F3) AEF Only          — 64 AEF embedding dimensions (A00–A63)
+  F4) S2 + L8           — 12 raw spectral bands from both sensors
+  F5) S2 + L8 + Indices — 15 features (12 bands + NDVI, NDWI, GCVI)
+  F6) S2 + L8 + AEF     — 76 features (12 bands + 64 embeddings)
+  F7) All               — 80 features (12 bands + 3 indices + 64 embeddings +
+                           Precipitation) — current default
+  F8) All + CSI         — All + top-N Cross-Sensor Indices discovered from
+                           spectral index discovery (L8_blue - swir1, etc.)
+
+  Justification: Tests whether individual sensor data alone is sufficient, or
+  whether multi-sensor fusion and/or AEF embeddings provide significant uplift.
+  Also tests whether the discovered cross-sensor indices add value.
+
+──────────────────────────────────────────────────────────────────────────────
+AXIS 6: TEMPORAL CONTINUITY (Historical Track)
+──────────────────────────────────────────────────────────────────────────────
+  To apply the final classifier to historical imagery dating back to the 1990s,
+  we must train models that do not rely on modern satellites (Sentinel-2 launched
+  in 2015) or modern AI embeddings (Gemini AEF). 
+  
+  Therefore, the testing matrix splits into two parallel tracks:
+  
+  TRACK A: Modern Performance (Max Accuracy)
+  - Can use any combinations of Sentinel-2, Landsat 8, and AEF Embeddings.
+  - Objective: Best possible classification for present-day LULC maps.
+  
+  TRACK B: Historical Continuity (Max Compatibility)
+  - STRICTLY restricted to Landsat shared bands (Blue, Green, Red, NIR, 
+    SWIR1, SWIR2) and indices derived purely from them.
+  - Cannot use Sentinel-2 or AEF embeddings.
+  - Objective: Train the best possible model that can be backcast to Landsat 5/7.
+
+================================================================================
+III. MODEL ARCHITECTURES
+================================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+STAGE 1: BASE LEARNERS
+──────────────────────────────────────────────────────────────────────────────
+  M1) XGBoost
+      - Input: Tabular features (optical bands, indices, embeddings, etc.)
+      - Hyperparameters tuned via Bayesian Search (see Section IV)
+      - Handles tabular data natively; serves as strongest baseline
+
+  M2) 1D-CNN (Convolutional Neural Network)
+      - Input: Feature vector reshaped as 1D sequence
+      - Architecture: Conv1D → BatchNorm → ReLU → Conv1D → GlobalAvgPool → FC
+      - Captures local spectral neighbourhood patterns between adjacent bands
+      - Hyperparameters tuned via Bayesian Search
+
+  M3) LSTM (Long Short-Term Memory)
+      - Input: Feature vector treated as a temporal/sequential signal
+      - Architecture: LSTM → Dropout → Dense → Softmax
+      - Captures sequential dependencies across band ordering
+      - Hyperparameters tuned via Bayesian Search
+
+──────────────────────────────────────────────────────────────────────────────
+STAGE 2: ENSEMBLE COMBINATIONS
+──────────────────────────────────────────────────────────────────────────────
+  E1) XGBoost alone              — Solo baseline (no ensemble)
+  E2) XGBoost + CNN              — 2-model ensemble
+  E3) XGBoost + CNN + LSTM       — Full 3-model ensemble
+
+  Each base learner outputs class probabilities (soft predictions).
+  These probabilities are concatenated and fed into the meta-learner.
+
+──────────────────────────────────────────────────────────────────────────────
+STAGE 3: META-LEARNER (Stacking Classifier)
+──────────────────────────────────────────────────────────────────────────────
+  S1) Logistic Regression        — Linear meta-learner; interpretable,
+                                    less prone to overfitting
+  S2) MLP (Multi-Layer Perceptron) — Non-linear meta-learner; can capture
+                                      complex inter-model interactions
+
+  The meta-learner takes the stacked probability outputs from Stage 2 and
+  produces the final LULC class prediction.
+
+  A/B Test: S1 vs S2 for each ensemble configuration (E2 and E3).
+
+================================================================================
+IV. HYPERPARAMETER TUNING
+================================================================================
+
+Method: Bayesian Optimisation (via Optuna or scikit-optimize)
+  - Uses a probabilistic surrogate model (Tree-structured Parzen Estimator)
+  - More efficient than grid/random search for high-dimensional spaces
+  - Each model gets its own Bayesian search trial budget
+
+Search Spaces:
+
+  XGBoost:
+    - n_estimators:    [100, 500]
+    - max_depth:       [4, 12]
+    - learning_rate:   [0.01, 0.3]    (log-uniform)
+    - subsample:       [0.6, 1.0]
+    - colsample_bytree:[0.6, 1.0]
+    - min_child_weight:[1, 10]
+    - gamma:           [0, 5]
+
+  1D-CNN:
+    - num_filters:     [32, 128]
+    - kernel_size:     [3, 7]
+    - num_layers:      [2, 4]
+    - learning_rate:   [1e-4, 1e-2]   (log-uniform)
+    - dropout:         [0.1, 0.5]
+    - batch_size:      [32, 256]
+
+  LSTM:
+    - hidden_size:     [32, 256]
+    - num_layers:      [1, 3]
+    - learning_rate:   [1e-4, 1e-2]   (log-uniform)
+    - dropout:         [0.1, 0.5]
+    - batch_size:      [32, 256]
+
+  Meta-Learner (MLP variant):
+    - hidden_layer_sizes: [(50,), (100,), (100,50), (200,100)]
+    - alpha (L2 reg):     [1e-5, 1e-2]  (log-uniform)
+    - learning_rate_init: [1e-4, 1e-2]  (log-uniform)
+
+  Cross-Validation: Stratified 5-Fold (inner loop) for tuning
+  Budget: 50–100 trials per model (adjust based on compute constraints)
+
+================================================================================
+V. FULL EXPERIMENT MATRIX
+================================================================================
+
+The following table shows the complete set of experiments. Each row is a
+unique experimental configuration.
+
+┌──────┬───────────┬──────────────┬──────────────┬─────────────────┬─────────────┐
+│ ID   │ Noise Red │ Feature Grp  │ Cloud Mask   │ Model Config    │ Meta-Learner│
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ PHASE 1A — FEATURE GROUP SWEEP (Noise=OFF, Cloud=C0, XGBoost solo)         │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ 1.1  │ OFF       │ F1 (S2 Only) │ C0           │ XGBoost solo    │ —           │
+│ 1.2  │ OFF       │ F2 (L8 Only) │ C0           │ XGBoost solo    │ —           │
+│ 1.3  │ OFF       │ F3 (AEF Only)│ C0           │ XGBoost solo    │ —           │
+│ 1.4  │ OFF       │ F4 (S2+L8)   │ C0           │ XGBoost solo    │ —           │
+│ 1.5  │ OFF       │ F5 (S2+L8+Ix)│ C0           │ XGBoost solo    │ —           │
+│ 1.6  │ OFF       │ F6 (S2+L8+AEF)│C0           │ XGBoost solo    │ —           │
+│ 1.7  │ OFF       │ F7 (All)     │ C0           │ XGBoost solo    │ —           │
+│ 1.8  │ OFF       │ F8 (All+CSI) │ C0           │ XGBoost solo    │ —           │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ PHASE 1B — NOISE REDUCTION (Best Feature Group from 1A)                    │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ 1.9  │ ON        │ Best FG      │ C0           │ XGBoost solo    │ —           │
+│ 1.10 │ OFF       │ Best FG      │ C0           │ XGBoost solo    │ —           │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ PHASE 1C — HISTORICAL TRACK (Strictly Landsat-only features, XGBoost solo) │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ 1.11 │ OFF       │ F2 (L8 Only) │ C0           │ XGBoost solo    │ —           │
+│ 1.12 │ OFF       │ F2 + L8_CSI  │ C0           │ XGBoost solo    │ —           │
+│ 1.13 │ ON        │ Best of ^    │ C0           │ XGBoost solo    │ —           │
+├──────┴───────────┴──────────────┴──────────────┴─────────────────┴─────────────┤
+│ From this point, both the Best MODERN config and Best HISTORICAL config carry  │
+│ forward into Phase 2 as parallel tracks.                                       │
+├──────┬───────────┬──────────────┬──────────────┬─────────────────┬─────────────┤
+│ PHASE 2 — ENSEMBLE ARCHITECTURE                                            │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ 2.1  │ Best Mod  │ Best Mod FG  │ C0           │ XGB+CNN         │ LogReg      │
+│ 2.2  │ Best Mod  │ Best Mod FG  │ C0           │ XGB+CNN         │ MLP         │
+│ 2.3  │ Best Mod  │ Best Mod FG  │ C0           │ XGB+CNN+LSTM    │ LogReg      │
+│ 2.4  │ Best Mod  │ Best Mod FG  │ C0           │ XGB+CNN+LSTM    │ MLP         │
+│ 2.5  │ Best Hist │ Best Hist FG │ C0           │ Best Hist Ensbl │ Best Meta   │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ PHASE 3 — CLOUD MASKING (Testing on the Best Modern Model)                 │
+├──────┼───────────┼──────────────┼──────────────┼─────────────────┼─────────────┤
+│ 3.1  │ Best Mod  │ Best Mod FG  │ C1 (QA-Pix)  │ Best Mod Ensbl  │ Best Meta   │
+│ 3.2  │ Best Mod  │ Best Mod FG  │ C2 (s2cloud) │ Best Mod Ensbl  │ Best Meta   │
+│ 3.3  │ Best Mod  │ Best Mod FG  │ C3 (CS+)     │ Best Mod Ensbl  │ Best Meta   │
+│ 3.4  │ Best Mod  │ Best Mod FG  │ C4 (Dynamic) │ Best Mod Ensbl  │ Best Meta   │
+└──────┴───────────┴──────────────┴──────────────┴─────────────────┴─────────────┘
+
+Total experiments: 22 configurations (phased, not factorial, to stay tractable)
+
+NOTE ON PHASED APPROACH:
+  Running a full factorial of all axes would produce 8×2×5×3×2 = 480 configs.
+  The phased approach above reduces this to ~18 by carrying forward the
+  winner of each phase. This is standard in ML experimentation to keep
+  compute costs manageable.
+
+================================================================================
+VI. EXECUTION ORDER & DEPENDENCIES
+================================================================================
+
+1. PHASE 0 — DATA PREPARATION
+   a. Complete Earth Engine extraction for Dataset 3
+   b. Apply binning (binning_dataset_3.csv)
+   c. Normalize features (fit scaler on train split only)
+   d. Run unsupervised learning pipeline (PCA, K-Means, DBSCAN, LDA)
+   e. Augment dataset (noise removal + cluster/LDA features)
+   f. Apply SMOTE to Tree-based Agriculture on training fold
+
+2. PHASE 1A — FEATURE GROUP SWEEP
+   a. Train XGBoost solo across 8 feature group configurations (F1–F8)
+   b. Bayesian hyperparameter tuning for XGBoost
+   c. Identify best feature group
+   d. Record: F1, Accuracy, Confusion Matrices, Feature Importance
+
+3. PHASE 1B — NOISE REDUCTION
+   a. Using the best feature group, A/B test noise ON vs OFF
+   b. Carry best config forward to Phase 2
+
+4. PHASE 2 — ENSEMBLE ARCHITECTURE
+   a. Train CNN and LSTM base learners (Bayesian-tuned)
+   b. Build stacking ensembles (E2 and E3)
+   c. A/B test Logistic Regression vs MLP meta-learner
+   d. Identify best ensemble configuration
+
+5. PHASE 3 — CLOUD MASKING (Requires re-extraction from Earth Engine)
+   a. Re-extract Dataset 3 using C1, C2, C3, C4 masking strategies
+   b. Retrain best ensemble on each masked dataset
+   c. Compare results against C0 baseline
+
+6. FINAL — REPORTING
+   a. Generate comprehensive comparison report
+   b. Produce geographic prediction maps for best model
+   c. Document all results and decisions
+
+================================================================================
+VII. VALIDATION FRAMEWORK
+================================================================================
+
+  - Stratified 80/20 Train/Test split (held constant across ALL experiments)
+  - Stratified 5-Fold Cross-Validation within training set for tuning
+  - Adversarial Validation (ROC AUC) to check spatial covariate shift
+  - Nearest-Neighbor Distance to quantify spatial extrapolation risk
+  - Paired statistical tests (McNemar's test) between experiments to confirm
+    significance of observed differences
+
+================================================================================
+VIII. OUTPUT ARTIFACTS PER EXPERIMENT
+================================================================================
+
+For each experiment ID, the following will be generated:
+  - Classification report (Level 1 + Level 2)
+  - Confusion matrices (Level 1 + Level 2)
+  - Feature importance plots (where applicable)
+  - Bayesian search convergence plots
+  - Model checkpoint (.pkl or .pt)
+  - Training log with timing and resource usage

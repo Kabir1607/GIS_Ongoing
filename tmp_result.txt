@@ -1,0 +1,6 @@
+[Faizee_granular_data.csv] Exact classes:
+['Agroforest', 'Arecanut Plantation', 'Bamboo', 'Cardamom', 'Chilli plantation', 'Dragon Fruit Plantation', 'Fern cover', 'Grassland', 'Jhum cropping', 'Jhum fallow', 'Landslide', 'Mixed decidous forest', 'Mixed plantation', 'Oil Palm', 'Orange', 'Pineapple', 'Rubber plantation', 'Tea plantation', 'Village', 'bamboo', 'decidous forest', 'deciduous forest', 'fallow', 'grassland', 'jhum', 'mixed agriculture', 'mixed plantation', 'mustard', 'oil plam', 'orange', 'pine', 'pineaple plantation', 'rubber plantation', 'scrub', 'scrubland', 'tomato', 'water']
+
+[Chiging_data.csv] Exact classes:
+['AM', 'DEFO', 'MN', 'OP', 'RC', 'RW', 'SB', 'SC']
+
